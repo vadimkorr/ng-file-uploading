@@ -22,7 +22,7 @@ export class AppComponent {
 
   sayHi() {
     this._restService.sayHi().subscribe(r => {
-      console.log(`Server responded: ${r}`);
+      console.log(`Server responded: ${r.data}`);
     });
   }
 }
