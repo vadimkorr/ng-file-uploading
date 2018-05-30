@@ -1,8 +1,8 @@
-import { UrlService } from './url.service';
 import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
-import { Urls } from '../consts/urls';
 import { Observable } from 'rxjs';
+import { Urls } from '../../../consts/urls';
+import { ApiService } from './api/api.service';
+import { UrlService } from '../url/url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,10 @@ export class RestService {
   }
   uploadFile(data: any): Observable<any> {
     const fullUrl = this._urlService.getUrl(Urls.uploadFile);
-    return this.uploadFile(data);
+    return this._apiService.post(fullUrl, data);
+  }
+  downloadFile(): Observable<any> {
+    const fullUrl = this._urlService.getUrl(Urls.downloadFile);
+    return this._apiService.get(fullUrl);
   }
 }

@@ -1,11 +1,11 @@
-import { UrlService } from './services/url.service';
-import { ApiService } from './services/api.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { RestService } from './services/rest.service';
+import { ApiService } from './services/utils/rest/api/api.service';
+import { RestService } from './services/utils/rest/rest.service';
+import { UrlService } from './services/utils/url/url.service';
 
 @NgModule({
   declarations: [

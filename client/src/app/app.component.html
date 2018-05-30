@@ -1,6 +1,14 @@
-<form [formGroup]="formGroup" (ngSubmit)="uploadFile()">
-  <input type="file" formControlName="file"/>
-  <button type="submit">Submit</button>
+<button type="button" (click)="sayHi()">Say Hi</button>
+
+<form [formGroup]="formGroup" (ngSubmit)="submit()">
+  <input
+    type="file"
+    (change)="onfileChange($event)"
+    placeholder="Upload a file..."
+    formControlName="file"
+    multiple/>
+  <button type="submit">Upload</button>
+  <span>Progress: {{uploadingProgress}}%</span>
 </form>
 
-<button type="button" (click)="sayHi()">Say Hi</button>
+<button type="button" (click)="download()">Download</button>

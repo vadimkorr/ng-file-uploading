@@ -1,4 +1,5 @@
 export const Urls = {
   getHi: '/hi',
-  uploadFile: '/upload'
+  uploadFile: '/upload',
+  downloadFile: '/download'
 };
