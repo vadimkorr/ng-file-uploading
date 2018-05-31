@@ -1,14 +1,44 @@
-<button type="button" (click)="sayHi()">Say Hi</button>
+<!-- <button type="button" (click)="sayHi()">Say Hi</button>
+<button type="button" (click)="download()">Download</button> -->
 
-<form [formGroup]="formGroup" (ngSubmit)="submit()">
-  <input
-    type="file"
-    (change)="onfileChange($event)"
-    placeholder="Upload a file..."
-    formControlName="file"
-    multiple/>
-  <button type="submit">Upload</button>
-  <span>Progress: {{uploadingProgress}}%</span>
-</form>
-
-<button type="button" (click)="download()">Download</button>
+<div class="container-fluid">
+  <form [formGroup]="formGroup" (ngSubmit)="submit()" class="form">
+    <div class="form-group">
+      <label for="input_name" class="form-control-label">Name</label>
+      <div class="form-control-container">
+        <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': formGroup?.controls.name?.errors }"
+          id="input_name">
+        <div class="validation-error" *ngIf="formGroup?.controls?.name?.errors?.required">Required field</div>
+        <div class="validation-error" *ngIf="formGroup?.controls?.name?.errors?.minlength">The name must be of minimum length {{formGroup?.controls.name?.errors?.minlength?.requiredLength}} characters</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="input_email" class="form-control-label">Email</label>
+      <div class="form-control-container">
+        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': formGroup?.controls.email?.errors }"
+          id="input_email">
+        <div class="validation-error" *ngIf="formGroup?.controls?.email?.errors?.required">Required field</div>
+        <div class="validation-error" *ngIf="formGroup?.controls?.email?.errors?.minlength">The name must be of minimum length {{formGroup?.controls.email?.errors?.minlength?.requiredLength}} characters</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-control-label">Add files</label>
+      <div class="form-control-container">
+        <div class="custom-file">
+          <input type="file" formControlName="file" (change)="onfileChange($event)" id="input_files" [ngClass]="{ 'is-invalid': formGroup?.controls.file?.errors }"
+            multiple>
+        </div>
+        <div class="validation-error" *ngIf="formGroup?.controls?.file?.errors?.required">Required fields</div>
+        <div *ngFor="let f of filesToUpload">
+          {{f.name}}
+        </div>
+      </div>
+    </div>
+    <span>Progress: {{uploadingProgress}}%</span>
+    <div class="form-group row">
+      <div class="col-sm-10">
+        <button type="submit" class="btn btn-success" [disabled]="formGroup.pristine||!formGroup.valid">Send</button>
+      </div>
+    </div>
+  </form>
+</div>

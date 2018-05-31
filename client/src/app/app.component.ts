@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, Validator } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { HttpEventType } from '@angular/common/http';
 import { CalcService } from './services/utils/calc/calc.service';
@@ -8,7 +8,7 @@ import { RestService } from './services/utils/rest/rest.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   uploadingProgress = 0;
@@ -20,7 +20,9 @@ export class AppComponent {
     private _calcService: CalcService ) {}
 
   formGroup = this._fb.group({
-    file: new FormControl(null)
+    name: new FormControl(null, Validators.compose([Validators.required, Validators.minLength(2)])),
+    email: new FormControl(null, Validators.required),
+    file: new FormControl(null, Validators.required)
   });
 
   submit() {

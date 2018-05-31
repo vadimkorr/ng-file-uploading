@@ -1,0 +1,60 @@
+$control-height: 40px;
+
+.container-fluid {
+  display: flex;
+  justify-content: center;
+}
+
+.form {
+  flex: 1;
+  .form-group {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    padding: 5px;
+    > .form-control-label {
+      flex: 1 0 150px;
+      height: $control-height;
+      display: flex;
+      align-items: center;
+    }
+    > .form-control-container {
+      flex: 4 0 300px;
+      > .form-control {
+        height: $control-height;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 5px 10px;
+        box-sizing: border-box;
+        &.is-invalid {
+          border: 2px solid lightpink;
+        }
+      }
+      > .validation-error {
+        color: lightpink;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .form {
+    padding: 0 0;
+  }
+}
+@media screen and (min-width: 768px) {
+  .form {
+    padding: 0 10%;
+  }
+}
+@media screen and (min-width: 992px) {
+  .form {
+    padding: 0 20%;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .form {
+    padding: 0 20%;
+  }
+}
