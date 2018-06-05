@@ -5,9 +5,9 @@ import { RouterModule, Routes } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { AppComponent } from "./app.component";
-import { ApiService } from "./services/utils/rest/api/api.service";
-import { RestService } from "./services/utils/rest/rest.service";
-import { UrlService } from "./services/utils/url/url.service";
+import { ApiService } from "@services/rest/api/api.service";
+import { RestService } from "@services/rest/rest.service";
+import { UrlService } from "@services/url/url.service";
 import { Route } from "@angular/compiler/src/core";
 
 const routes: Routes = [

@@ -1,8 +1,9 @@
 import { UploaderService } from "./services/uploader/uploader.service";
 import { Component } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { CalcService } from "../services/utils/calc/calc.service";
+import { CalcService } from "@services/calc/calc.service";
 import { HttpEventType } from "@angular/common/http";
+import { FileService } from "@services/file/file.service";
 
 @Component({
   selector: "app-uploader",
@@ -16,7 +17,8 @@ export class UploaderComponent {
   constructor(
     private _fb: FormBuilder,
     private _uploaderService: UploaderService,
-    private _calcService: CalcService
+    private _calcService: CalcService,
+    private _fileService: FileService
   ) {}
 
   formGroup = this._fb.group({
@@ -32,32 +34,35 @@ export class UploaderComponent {
   }
 
   submit() {
-    this._uploaderService.uploadFile(this.fileToUpload).subscribe(e => {
-      switch (e.type) {
-        case HttpEventType.DownloadProgress:
-          console.log("DownloadProgress", e);
-          break;
-        case HttpEventType.Response:
-          console.log("Response", e);
-          break;
-        case HttpEventType.ResponseHeader:
-          console.log("ResponseHeader", e);
-          break;
-        case HttpEventType.Sent:
-          console.log("Sent", e);
-          break;
-        case HttpEventType.UploadProgress:
-          console.log("UploadProgress", e);
-          this.uploadingProgress = this._calcService.getPartInPercent(
-            e.loaded,
-            e.total
-          );
-          break;
-        case HttpEventType.User:
-          console.log("User", e);
-          break;
-      }
-    });
+    this._uploaderService
+      .uploadFile(this.fileToUpload, this.fileToUpload.name)
+      .subscribe(e => {
+        switch (e.type) {
+          case HttpEventType.DownloadProgress:
+            console.log("DownloadProgress", e);
+            break;
+          case HttpEventType.Response:
+            console.log("Response", e);
+            this._fileService.save(e.body);
+            break;
+          case HttpEventType.ResponseHeader:
+            console.log("ResponseHeader", e);
+            break;
+          case HttpEventType.Sent:
+            console.log("Sent", e);
+            break;
+          case HttpEventType.UploadProgress:
+            console.log("UploadProgress", e);
+            this.uploadingProgress = this._calcService.getPartInPercent(
+              e.loaded,
+              e.total
+            );
+            break;
+          case HttpEventType.User:
+            console.log("User", e);
+            break;
+        }
+      });
   }
 
   sayHi() {

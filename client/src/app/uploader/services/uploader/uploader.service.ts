@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { RestService } from "./../../../services/utils/rest/rest.service";
+import { RestService } from "@services/rest/rest.service";
 import { Injectable } from "@angular/core";
 import { UploaderModule } from "../../uploader.module";
 
@@ -11,9 +11,10 @@ export class UploaderService {
     return this._restService.sayHi();
   }
 
-  uploadFile(file: File): Observable<any> {
-    const formData: any = new FormData();
-    formData.append("file", file, file.name);
+  uploadFile(file: File, name: string): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append("name", name);
+    formData.append("file", file);
     return this._restService.uploadFile(formData);
   }
 }

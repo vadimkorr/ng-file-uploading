@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Urls } from "../../../consts/urls";
-import { ApiService } from "./api/api.service";
-import { UrlService } from "../url/url.service";
+import { Urls } from "@consts/urls";
+import { ApiService } from "@services/rest/api/api.service";
+import { UrlService } from "@services/url/url.service";
 
 @Injectable({
   providedIn: "root"
