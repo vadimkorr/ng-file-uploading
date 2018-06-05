@@ -1,60 +1,119 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormControl, Validators, Validator } from '@angular/forms';
-import { map } from 'rxjs/operators';
-import { HttpEventType } from '@angular/common/http';
-import { CalcService } from './services/utils/calc/calc.service';
-import { RestService } from './services/utils/rest/rest.service';
+import { Component } from "@angular/core";
+import {
+  FormBuilder,
+  FormControl,
+  Validators,
+  Validator
+} from "@angular/forms";
+import { map } from "rxjs/operators";
+import { HttpEventType } from "@angular/common/http";
+import { CalcService } from "./services/utils/calc/calc.service";
+import { RestService } from "./services/utils/rest/rest.service";
+import * as FileSaver from "file-saver";
+import * as io from "socket.io-client";
+import { environment } from "../environments/environment";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
   uploadingProgress = 0;
   filesToUpload: File[] = [];
+  socket: SocketIOClient.Socket;
 
   constructor(
     private _fb: FormBuilder,
     private _restService: RestService,
-    private _calcService: CalcService ) {}
+    private _calcService: CalcService
+  ) {
+    this.socket = io.connect(environment.baseUrl);
+    this.socket.on("sending", function(stream) {
+      stream.on("end", function() {
+        console.log("file received");
+      });
+    });
+    // this.socket = io.connect();
+  }
 
   formGroup = this._fb.group({
-    name: new FormControl(null, Validators.compose([Validators.required, Validators.minLength(2)])),
+    name: new FormControl(
+      null,
+      Validators.compose([Validators.required, Validators.minLength(2)])
+    ),
     email: new FormControl(null, Validators.required),
     file: new FormControl(null, Validators.required)
   });
+
+  upload2() {
+    const formData: any = new FormData();
+    for (let i = 0; i < this.filesToUpload.length; i++) {
+      const f = this.filesToUpload[i];
+      formData.append("files", f, f.name);
+    }
+    this._restService.upload2File(formData).subscribe(e => {
+      switch (e.type) {
+        case HttpEventType.DownloadProgress:
+          console.log("DownloadProgress", e);
+          break;
+        case HttpEventType.Response:
+          console.log("Response", e);
+          // FileSaver.saveAs(e.body, "file");
+          break;
+        case HttpEventType.ResponseHeader:
+          console.log("ResponseHeader", e);
+          break;
+        case HttpEventType.Sent:
+          console.log("Sent", e);
+          break;
+        case HttpEventType.UploadProgress:
+          console.log("UploadProgress", e);
+          this.uploadingProgress = this._calcService.getPartInPercent(
+            e.loaded,
+            e.total
+          );
+          break;
+        case HttpEventType.User:
+          console.log("User", e);
+          break;
+      }
+    });
+  }
 
   submit() {
     const formData: any = new FormData();
     for (let i = 0; i < this.filesToUpload.length; i++) {
       const f = this.filesToUpload[i];
-      formData.append('files', f, f.name);
+      formData.append("files", f, f.name);
     }
-    this._restService.uploadFile(formData)
-      .subscribe(e => {
-        switch (e.type) {
-          case HttpEventType.DownloadProgress:
-            console.log('DownloadProgress', e);
-            break;
-          case HttpEventType.Response:
-            console.log('Response', e);
-            break;
-          case HttpEventType.ResponseHeader:
-            console.log('ResponseHeader', e);
-            break;
-          case HttpEventType.Sent:
-            console.log('Sent', e);
-            break;
-          case HttpEventType.UploadProgress:
-            console.log('UploadProgress', e);
-            this.uploadingProgress = this._calcService.getPartInPercent(e.loaded, e.total);
-            break;
-          case HttpEventType.User:
-            console.log('User', e);
-            break;
-        }
-      });
+    this._restService.uploadFile(formData).subscribe(e => {
+      switch (e.type) {
+        case HttpEventType.DownloadProgress:
+          console.log("DownloadProgress", e);
+          break;
+        case HttpEventType.Response:
+          console.log("Response", e);
+          FileSaver.saveAs(e.body, "file");
+          break;
+        case HttpEventType.ResponseHeader:
+          console.log("ResponseHeader", e);
+          break;
+        case HttpEventType.Sent:
+          console.log("Sent", e);
+          break;
+        case HttpEventType.UploadProgress:
+          console.log("UploadProgress", e);
+          this.uploadingProgress = this._calcService.getPartInPercent(
+            e.loaded,
+            e.total
+          );
+          break;
+        case HttpEventType.User:
+          console.log("User", e);
+          break;
+      }
+    });
   }
 
   sayHi() {
@@ -64,13 +123,18 @@ export class AppComponent {
   }
 
   download() {
-    this._restService.downloadFile()
-      .subscribe(r => {
-        console.log(r);
-      });
+    this._restService.downloadFile().subscribe(r => {
+      console.log(r);
+    });
   }
 
   onfileChange(event: any) {
     this.filesToUpload = event.target.files;
+  }
+
+  emitMsg() {
+    this.socket.emit("event1", {
+      msg: "Client to server, can you hear me server?"
+    });
   }
 }
