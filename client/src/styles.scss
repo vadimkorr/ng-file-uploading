@@ -1,1 +1,125 @@
-/* You can add global styles to this file, and also import other style files */
+$control-height: 40px;
+$error-color: lightpink;
+$default-color: lightgray;
+
+* {
+  font-family: Tahoma, Geneva, sans-serif;
+  font-size: 14px;
+}
+
+button {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 15px 20px;
+  min-width: 120px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 8px;
+  &:disabled {
+    background-color: #88b38a;
+  }
+  &.blue {
+    background-color: #008cba;
+    &:disabled {
+      background-color: #71afc4;
+    }
+  }
+}
+
+.container-fluid {
+  display: flex;
+  justify-content: center;
+}
+
+.form {
+  width: 100%;
+  .form-group {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    padding: 5px;
+
+    // label
+    > .form-control-label {
+      flex: 1 1 100px;
+      height: $control-height;
+      display: flex;
+      align-items: center;
+    }
+
+    // any control
+    > .form-control-container {
+      flex: 4 1 300px;
+      > .form-control {
+        height: $control-height;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 5px 10px;
+        box-sizing: border-box;
+        border: 2px solid $default-color;
+        &.is-invalid {
+          border: 2px solid $error-color;
+        }
+      }
+      > .validation-error {
+        color: $error-color;
+      }
+    }
+
+    // file control
+    > .file-control-outer-container {
+      position: relative;
+      width: 100%;
+
+      > input[type="file"] {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: $control-height;
+        opacity: 0;
+      }
+      > .file-control-inner-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: $control-height;
+        z-index: 1;
+
+        &::after {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          padding: 9px;
+          content: "Browse";
+          background-color: #e9ecef;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .form {
+    width: 100%;
+  }
+}
+@media screen and (min-width: 768px) {
+  .form {
+    width: 90%;
+  }
+}
+@media screen and (min-width: 992px) {
+  .form {
+    width: 70%;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .form {
+    width: 700px;
+  }
+}
